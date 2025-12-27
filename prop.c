@@ -70,7 +70,7 @@ int rewrite(struct gamma* c) {
         c->k = '^';                                                 \
         c->previous = comparsion;                                   \
         rewrite(comparsion);}else {                                 \
-        c->f = 0;                                                   \
+        c->f = 1;                                                   \
         c->k = 'Q';                                                 \
         rewrite(c);}
             CF_EPSIL
@@ -80,6 +80,15 @@ int rewrite(struct gamma* c) {
         switch (c->k) {
             case 'Q':
                 c->k = 64+c->lb;
+                if (c->f != 1) {
+                    if (get_random() > 0.5) {
+                        struct gamma* not = malloc(sizeof(struct gamma));
+                        not->k = 64+c->lb;
+                        not->previous = c->previous;
+                        c->k = '!';
+                        c->previous = not;
+                    }
+                }
                 break;
             case 'L':
                 CF_EPSIL

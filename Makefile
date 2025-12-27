@@ -6,7 +6,7 @@
 
 run:
 	gcc -lm prop.c -o prop
-	./prop
+	./prop > test.txt
 
 PHONY: run
 

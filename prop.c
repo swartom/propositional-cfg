@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <time.h>
 
 
-
-#define ALPHABET 4
+#define ALPHABET 26
 
 struct gamma {
     void* previous;
@@ -56,11 +56,11 @@ int rewrite(struct gamma* c) {
         case 'L':
 #define CF_EPSIL if (get_random() > 0.5){                           \
         struct gamma* not = malloc(sizeof(struct gamma));           \
-        not->k = '!';                                               \
+        not->k = 64+c->f ;                                          \
         not->previous = c->previous;                                \
         struct gamma* not2 = malloc(sizeof(struct gamma));          \
         not2->previous = not;                                       \
-        not2->k =  64+c->f;                                         \
+        not2->k = '!';                                          \
         struct gamma* comparsion = malloc(sizeof(struct gamma));    \
         comparsion->k = 'Q';                                        \
         comparsion->lb = c->lb;                                     \
@@ -83,9 +83,9 @@ int rewrite(struct gamma* c) {
                 if (c->f != 1) {
                     if (get_random() > 0.5) {
                         struct gamma* not = malloc(sizeof(struct gamma));
-                        not->k = 64+c->lb;
+                        not->k = '!';
                         not->previous = c->previous;
-                        c->k = '!';
+                        /* c->k = c->; */
                         c->previous = not;
                     }
                 }
@@ -101,15 +101,7 @@ int rewrite(struct gamma* c) {
 
 
 int main(){
-    // assume that $&$ is \land
-    // assume that $~$ is \lor
-    // assume that $!$ is \knot
-
-    // So each subset of the grammar has a 'bound' on the ordered alphabet
-
-    // The grammars take the form of
-    //
-
+    srand(time(NULL));
 
     struct gamma* chomsky_standard = (struct gamma*) malloc(sizeof(struct gamma));
     chomsky_standard->k = 'Q';
@@ -120,13 +112,9 @@ int main(){
     struct gamma* chain = chomsky_standard;
 
     do {
-        printf("%c(%d,%d)",chain->k,chain->lb,chain->ub);
-        chain = chain->previous;
-    }while(chain != NULL);
-    chain = chomsky_standard;
-    printf("\n");
-    do {
         printf("%c",chain->k);
+        struct gamma* last= chain;
         chain = chain->previous;
+        free(last);
     }while(chain != NULL);
 }

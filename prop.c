@@ -15,6 +15,8 @@ struct gamma {
     uint8_t ub;
     uint8_t f;
 };
+
+
 double get_random() { return (double)rand() / (double)RAND_MAX; }
 int rewrite(struct gamma* c) {
     uint8_t midpoint = (c->ub - c->lb)/2 + 1;
@@ -50,70 +52,37 @@ int rewrite(struct gamma* c) {
             rewrite(second);
             rewrite(not);
             break;
+
         case 'L':
-                if (get_random() > 0.5){
-                    struct gamma* not = malloc(sizeof(struct gamma));
-                    not->k = '!';
-                    not->previous = c->previous;
-
-                    struct gamma* not2 = malloc(sizeof(struct gamma));
-                    not2->previous = not;
-                    not2->k =  64+c->f;
-
-                    struct gamma* comparsion = malloc(sizeof(struct gamma));
-                    comparsion->k = 'Q'; // must be and other-wise tautology!
-
-                    comparsion->lb = c->lb;
-                    comparsion->ub = c->ub;
-                    comparsion->previous = not2;
-
-                    c->f = 0;
-                    c->k = '^';
-                    c->previous = comparsion;
-
-                    rewrite(comparsion);
-            } else {
-                c->f = 0;
-                c->k = 'Q';
-                rewrite(c);
-            }
+#define CF_EPSIL if (get_random() > 0.5){                           \
+        struct gamma* not = malloc(sizeof(struct gamma));           \
+        not->k = '!';                                               \
+        not->previous = c->previous;                                \
+        struct gamma* not2 = malloc(sizeof(struct gamma));          \
+        not2->previous = not;                                       \
+        not2->k =  64+c->f;                                         \
+        struct gamma* comparsion = malloc(sizeof(struct gamma));    \
+        comparsion->k = 'Q';                                        \
+        comparsion->lb = c->lb;                                     \
+        comparsion->ub = c->ub;                                     \
+        comparsion->previous = not2;                                \
+        c->f = 0;                                                   \
+        c->k = '^';                                                 \
+        c->previous = comparsion;                                   \
+        rewrite(comparsion);}else {                                 \
+        c->f = 0;                                                   \
+        c->k = 'Q';                                                 \
+        rewrite(c);}
+            CF_EPSIL
             break;
-    case 'S':
-            c->k = 'Q'; // Q can be any element in the set if its an $OR$ then switch to A which
-                        // has only one
-            break;
-                }
-    } else{
+    }
+} else{
         switch (c->k) {
             case 'Q':
                 c->k = 64+c->lb;
                 break;
             case 'L':
-                if (get_random() > 0.5){
-                    struct gamma* not = malloc(sizeof(struct gamma));
-                    not->k = '!';
-                    not->previous = c->previous;
-
-                    struct gamma* not2 = malloc(sizeof(struct gamma));
-                    not2->previous = not;
-                    not2->k =  64+c->f;
-
-                    struct gamma* comparsion = malloc(sizeof(struct gamma));
-                    comparsion->k = 'Q'; // must be and other-wise tautology!
-                    comparsion->lb = c->lb;
-                    comparsion->ub = c->ub;
-                    comparsion->previous = not2;
-
-                    c->f = 0;
-                    c->k = '^';
-                    c->previous = comparsion;
-
-                    rewrite(comparsion);
-            } else {
-                c->f = 0;
-                c->k = 'Q';
-                rewrite(c);
-            }
+                CF_EPSIL
             break;
         }
 

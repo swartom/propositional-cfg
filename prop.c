@@ -56,11 +56,11 @@ int rewrite(struct gamma* c) {
         case 'L':
 #define CF_EPSIL if (get_random() > 0.5){                           \
         struct gamma* not = malloc(sizeof(struct gamma));           \
-        not->k = 64+c->f ;                                          \
         not->previous = c->previous;                                \
         struct gamma* not2 = malloc(sizeof(struct gamma));          \
         not2->previous = not;                                       \
         not2->k = '!';                                          \
+        not->k = 64+c->f ;                                          \
         struct gamma* comparsion = malloc(sizeof(struct gamma));    \
         comparsion->k = 'Q';                                        \
         comparsion->lb = c->lb;                                     \
@@ -83,9 +83,10 @@ int rewrite(struct gamma* c) {
                 if (c->f != 1) {
                     if (get_random() > 0.5) {
                         struct gamma* not = malloc(sizeof(struct gamma));
-                        not->k = '!';
+                        not->k = c->k;
                         not->previous = c->previous;
                         /* c->k = c->; */
+                        c->k = '!';
                         c->previous = not;
                     }
                 }

@@ -37,12 +37,12 @@ int rewrite(struct gamma* c) {
             c->ub =0 ;
             c->lb =0 ;
             if (get_random() > 0.5) { // OR
-                c->k = '~';
-                second->f = midpoint;
-                second->k = 'L';
+                c->k = 'v';
+                not->f = midpoint;
+                not->k = 'L';
                 // if its a not, then the inverse of this is valid in the other half
             } else { // AND
-                c->k = '&';
+                c->k = '^';
                 // if its a and then a tautology in the other side is an annihilation.
 
             }
@@ -51,7 +51,7 @@ int rewrite(struct gamma* c) {
             rewrite(not);
             break;
         case 'L':
-            if (get_random() > 0.5){
+                if (get_random() > 0.0){
                     struct gamma* not = malloc(sizeof(struct gamma));
                     not->k = 64+c->f;
                     not->previous = c->previous;
@@ -67,8 +67,9 @@ int rewrite(struct gamma* c) {
                     comparsion->previous = not2;
 
                     c->f = 0;
-                    c->k = '&';
+                    c->k = '^';
                     c->previous = comparsion;
+
                     rewrite(comparsion);
             } else {
                 c->f = 0;
@@ -87,14 +88,14 @@ int rewrite(struct gamma* c) {
                 c->k = 64+c->lb;
                 break;
             case 'L':
-                if (get_random() > 0.5){
+                if (get_random() > 0.0){
                     struct gamma* not = malloc(sizeof(struct gamma));
-                    not->k = 64+c->f;
+                    not->k = '!';
                     not->previous = c->previous;
 
                     struct gamma* not2 = malloc(sizeof(struct gamma));
                     not2->previous = not;
-                    not2->k = 'B';
+                    not2->k =  64+c->f;
 
                     struct gamma* comparsion = malloc(sizeof(struct gamma));
                     comparsion->k = 'Q'; // must be and other-wise tautology!
@@ -103,8 +104,9 @@ int rewrite(struct gamma* c) {
                     comparsion->previous = not2;
 
                     c->f = 0;
-                    c->k = '&';
+                    c->k = '^';
                     c->previous = comparsion;
+
                     rewrite(comparsion);
             } else {
                 c->f = 0;
@@ -141,7 +143,7 @@ int main(){
     do {
         printf("%c(%d,%d)",chain->k,chain->lb,chain->ub);
         chain = chain->previous;
-    }while(chain->previous != NULL);
+    }while(chain != NULL);
     chain = chomsky_standard;
     printf("\n");
     do {

@@ -6,7 +6,7 @@
 
 
 
-#define ALPHABET 2
+#define ALPHABET 3
 
 struct gamma {
     void* previous;
@@ -51,14 +51,14 @@ int rewrite(struct gamma* c) {
             rewrite(not);
             break;
         case 'L':
-                if (get_random() > 0.0){
+                if (get_random() > 0.5){
                     struct gamma* not = malloc(sizeof(struct gamma));
-                    not->k = 64+c->f;
+                    not->k = '!';
                     not->previous = c->previous;
 
                     struct gamma* not2 = malloc(sizeof(struct gamma));
                     not2->previous = not;
-                    not2->k = '!';
+                    not2->k =  64+c->f;
 
                     struct gamma* comparsion = malloc(sizeof(struct gamma));
                     comparsion->k = 'Q'; // must be and other-wise tautology!
@@ -88,7 +88,7 @@ int rewrite(struct gamma* c) {
                 c->k = 64+c->lb;
                 break;
             case 'L':
-                if (get_random() > 0.0){
+                if (get_random() > 0.5){
                     struct gamma* not = malloc(sizeof(struct gamma));
                     not->k = '!';
                     not->previous = c->previous;
